@@ -34,8 +34,7 @@ function AuthenticateResultsMap(results) {
     $.post('/home/getmapcredentials', {},
         function (data) {
 
-            if (data.mapKey === null || data.mapKey === "")
-            {
+            if (data.mapKey === null || data.mapKey === "") {
                 showMap = false;
                 return;
             }
@@ -63,15 +62,15 @@ function AuthenticateResultsMap(results) {
 
             //Wait until the map resources are ready.
             resultsMap.events.add('ready', function () {
-  
+
                 /* Construct a zoom control*/
                 var zoomControl = new atlas.control.ZoomControl();
-      
+
                 /* Add the zoom control to the map*/
                 resultsMap.controls.add(zoomControl, {
                     position: "bottom-right"
-                    });
                 });
+            });
 
             AddMapPoints(results);
 
@@ -87,28 +86,23 @@ function AddMapPoints(results) {
     if (mapDataSource !== null) {
         // clear the data source, add new POIs and re-center the map
         mapDataSource.clear();
-        coordinates =  UpdatePOIs(results, mapDataSource);
+        coordinates = UpdatePOIs(results, mapDataSource);
         if (coordinates) {
-            resultsMap.setCamera ({ center: coordinates });
+            resultsMap.setCamera({ center: coordinates });
         }
     }
     else {
         //Create a data source to add it to the map 
         mapDataSource = new atlas.source.DataSource(null, {
-            //Tell the data source to cluster point data.
             cluster: true,
-
-            //The radius in pixels to cluster points together.
             clusterRadius: 45,
-
-            //The maximium zoom level in which clustering occurs.
-            //If you zoom in more than this, all points are rendered as symbols.
             clusterMaxZoom: 15
         });
         coordinates = UpdatePOIs(results, mapDataSource);
 
         //Wait until the map resources are ready for first set up.
         resultsMap.events.add('ready', function () {
+            resultsMap.imageSprite.add('bubble-icon', '../images/single_bubble.png');
 
             //take the last coordinates.
             if (coordinates) { resultsMap.setCamera({ center: coordinates }); }
@@ -118,37 +112,45 @@ function AddMapPoints(results) {
 
             //Create a bubble layer for rendering clustered data points.
             var clusterBubbleLayer = new atlas.layer.BubbleLayer(mapDataSource, null, {
-                //Scale the size of the clustered bubble based on the number of points inthe cluster.
+                opacity: 0.7,
                 radius: [
-                    'step',
+                    'interpolate',
+                    ['linear'],
                     ['get', 'point_count'],
-                    20,         //Default of 20 pixel radius.
-                    2, 30,    //If point_count >= 2, radius is 30 pixels.
-                    4, 40     //If point_count >= 4, radius is 40 pixels.
+                    2, 10,
+                    50, 35,
                 ],
 
-                //Change the color of the cluster based on the value on the point_cluster property of the cluster.
                 color: [
-                    'step',
+                    'interpolate',
+                    ['linear'],
                     ['get', 'point_count'],
-                    'blue',            //Default to lime green. 
-                    2, 'lime',     //If the point_count >= 2, color is lime.
-                    4, 'yellow'        //If the point_count >= 4, color is yellow.
+                    0, 'rgba(255, 108, 92, 1)',
+                    50, 'rgba(255, 108, 92, 1)',
+                    100, 'rgba(255, 108, 92, 1)'
                 ],
+
                 strokeWidth: 0,
-                filter: ['has', 'point_count'] //Only rendered data points which have a point_count property, which clusters do.
+                filter: ['has', 'point_count']
             });
 
             var symbolLayer = new atlas.layer.SymbolLayer(mapDataSource, null, {
-                filter: ['!', ['has', 'point_count']] //Filter out clustered points from this layer.
+                iconOptions: {
+                    image: 'bubble-icon',
+                    size: 0.3
+                },
+                textOptions: {
+                    //textField: ['concat', ['to-string', ['get', 'temperature']], 'Pin'],
+                    offset: [0, -.33]
+                },
+                filter: ['!', ['has', 'point_count']]
             });
 
             resultsMap.layers.add([
                 clusterBubbleLayer,
-                //Create a symbol layer to render the count of locations in a cluster.
                 new atlas.layer.SymbolLayer(mapDataSource, null, {
                     iconOptions: {
-                        image: 'none' //Hide the icon image.
+                        image: 'none'
                     },
                     textOptions: {
                         textField: ['get', 'point_count_abbreviated'],
@@ -163,7 +165,7 @@ function AddMapPoints(results) {
                 pixelOffset: [0, -18],
                 closeButton: false
             });
-            
+
             //Add a hover event to the symbol layer.
             resultsMap.events.add('click', symbolLayer, function (e) {
                 //Make sure that the point exists.
@@ -191,8 +193,7 @@ function AddMapPoints(results) {
                         //Open the popup.
                         popup.open(resultsMap);
                     }
-                    else
-                    {
+                    else {
                         popup.close();
                     }
                 }
@@ -261,11 +262,11 @@ function UpdateResults(data) {
         var score = data.results[i]["@search.score"];
         score = score.toFixed(2);
         var name;
-        var title; 
+        var title;
 
         result.idx = i;
 
-        var id = result[data.idField]; 
+        var id = result[data.idField];
 
         var tags = GetTagsHTML(result);
         var path;
@@ -281,7 +282,7 @@ function UpdateResults(data) {
         if (result["metadata_storage_name"] !== undefined) {
             name = result.metadata_storage_name.split(".")[0];
         }
-        
+
         if (result["metadata_title"] !== undefined && result["metadata_title"] !== null) {
             title = result.metadata_title;
         }
@@ -387,7 +388,7 @@ function UpdateResults(data) {
                                             <h4>Could not get metadata_storage_path for this result.</h4>
                                         </div>
                                     </div>
-                                </div>`; 
+                                </div>`;
         }
     }
 
