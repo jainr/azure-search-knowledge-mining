@@ -27,7 +27,9 @@ function ShowDocument(id) {
             var fileContainerHTML = GetFileHTML(path);
 
             // Transcript Tab Content
-            var transcriptContainerHTML = GetTranscriptHTML(result);
+            if (result.content !== null) {
+                var transcriptContainerHTML = GetTranscriptHTML(result);
+            }
 
             // Metadata Tab Content 
             var metadataContainerHTML = GetMetadataHTML(result);
