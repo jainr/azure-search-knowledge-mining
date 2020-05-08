@@ -146,19 +146,43 @@ function AddMapPoints(results) {
                 filter: ['!', ['has', 'point_count']]
             });
 
+            var symbolLayer2 = new atlas.layer.SymbolLayer(mapDataSource, null, {
+                iconOptions: {
+                    image: 'none'
+                }
+            });
+
             resultsMap.layers.add([
                 clusterBubbleLayer,
-                new atlas.layer.SymbolLayer(mapDataSource, null, {
-                    iconOptions: {
-                        image: 'none'
-                    },
-                    textOptions: {
-                        textField: ['get', 'point_count_abbreviated'],
-                        offset: [0, 0.4]
-                    }
-                }),
+                symbolLayer2,
                 symbolLayer
             ]);
+
+            clusterPopup = new atlas.Popup({
+                pixelOffset: [0, 0],
+                closeButton: false
+            });
+
+            resultsMap.events.add('mouseenter', clusterBubbleLayer, function (e) {
+                symbolLayer2.setOptions({
+                    textOptions: {
+                        textField: ['get', 'point_count_abbreviated'],
+                        offset: [0, 0.4], 
+                        opacity: 1
+                    }
+                });
+
+            });
+
+            resultsMap.events.add('mouseleave', clusterBubbleLayer, function () {
+                symbolLayer2.setOptions({
+                    textOptions: {
+                        textField: ['get', 'point_count_abbreviated'],
+                        offset: [0, 0.4],
+                        opacity: 0
+                    }
+                });
+            });
 
             //Create a popup but leave it closed so we can update it and display it later.
             popup = new atlas.Popup({
