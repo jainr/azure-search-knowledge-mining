@@ -140,7 +140,6 @@ function AddMapPoints(results) {
                     size: 0.3
                 },
                 textOptions: {
-                    //textField: ['concat', ['to-string', ['get', 'temperature']], 'Pin'],
                     offset: [0, -.33]
                 },
                 filter: ['!', ['has', 'point_count']]
