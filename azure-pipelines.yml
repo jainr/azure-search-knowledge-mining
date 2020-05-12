@@ -49,7 +49,7 @@ steps:
 
 - task: AzureWebApp@1
   inputs:
-    azureSubscription: 'KMDemoApp'
+    azureSubscription: 'azure-sub-og'
     appName: 'kminingdemoapp'
     package: $(Build.ArtifactStagingDirectory)/**/*.zip
 
