@@ -61,5 +61,5 @@ steps:
     deployToSlotOrASE: true
     resourceGroupName: 'knowledgemining-og-rg'
     slotName: 'kminingdempappqa'
-    package: '$(System.DefaultWorkingDirectory)/**/*.zip'
+    package: $(Build.ArtifactStagingDirectory)/**/*.zip
     deploymentMethod: 'auto'
