@@ -55,11 +55,11 @@ steps:
 
 - task: AzureWebApp@1
   inputs:
-    azureSubscription: 'AG-CE-AI-MN-SEISMIC(789908e0-5fc2-4c4d-b5f5-9764b0d602b3)'
+    azureSubscription: 'azure-sub-og'
     appType: 'webApp'
     appName: 'kminingdemoapp'
     deployToSlotOrASE: true
     resourceGroupName: 'knowledgemining-og-rg'
     slotName: 'kminingdempappqa'
-    package: '$(Build.ArtifactStagingDirectory)/**/*.zip'
+    package: '$(System.DefaultWorkingDirectory)/**/*.zip'
     deploymentMethod: 'auto'
