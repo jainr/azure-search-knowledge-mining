@@ -49,13 +49,13 @@ steps:
 
 - task: AzureWebApp@1
   inputs:
-    azureSubscription: 'KMDemoApp'
+    azureSubscription: 'KMSearchApp'
     appName: 'kminingdemoapp'
-    package: $(Build.ArtifactStagingDirectory)/**/*.zip
+    package: '$(Build.ArtifactStagingDirectory)/**/*.zip'
 
 - task: AzureWebApp@1
   inputs:
-    azureSubscription: 'AG-CE-AI-MN-SEISMIC(789908e0-5fc2-4c4d-b5f5-9764b0d602b3)'
+    azureSubscription: 'KMSearchApp'
     appType: 'webApp'
     appName: 'kminingdemoapp'
     deployToSlotOrASE: true
