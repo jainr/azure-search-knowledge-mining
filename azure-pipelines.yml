@@ -6,6 +6,9 @@
 trigger:
 - master
 
+pr:
+- master
+
 pool:
   vmImage: 'windows-latest'
 
@@ -46,20 +49,3 @@ steps:
   inputs:
     pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
     artifactName: 'knowledge-mining-app'
-
-- task: AzureWebApp@1
-  inputs:
-    azureSubscription: 'KMSearchApp'
-    appName: 'kminingdemoapp'
-    package: '$(Build.ArtifactStagingDirectory)/**/*.zip'
-
-- task: AzureWebApp@1
-  inputs:
-    azureSubscription: 'KMSearchApp'
-    appType: 'webApp'
-    appName: 'kminingdemoapp'
-    deployToSlotOrASE: true
-    resourceGroupName: 'knowledgemining-og-rg'
-    slotName: 'kminingdempappqa'
-    package: '$(Build.ArtifactStagingDirectory)/**/*.zip'
-    deploymentMethod: 'auto'
