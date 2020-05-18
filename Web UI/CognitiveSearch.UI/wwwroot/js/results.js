@@ -274,7 +274,7 @@ function UpdateMap(data) {
 function UpdateResults(data) {
     var resultsHtml = '';
 
-    $("#doc-count").html(` Available Results Count: ${data.count}`);
+    $("#doc-count").html(` Available Results Count Updated: ${data.count}`);
 
 
 
