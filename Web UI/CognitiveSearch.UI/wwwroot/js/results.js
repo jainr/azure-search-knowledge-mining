@@ -47,9 +47,12 @@ function AuthenticateResultsMap(results) {
 
             // Authenticate the map using the key 
             resultsMap = new atlas.Map('myMap', {
+                renderWorldCopies: true,
+                autoResize: true,
                 center: coordinates,
                 visibility: "visible",
                 zoom: 4,
+                minZoom: 1.42,
                 width: "500px",
                 height: "500px",
                 style: "road_shaded_relief",
