@@ -90,8 +90,8 @@ namespace CognitiveSearch.UI
             SearchParameters sp = new SearchParameters()
             {
                 SearchMode = SearchMode.All,
-                Top = 10,
-                Skip = (currentPage - 1) * 10,
+                Top = 200,
+                Skip = (currentPage - 1) * 200,
                 IncludeTotalResultCount = true,
                 QueryType = QueryType.Full,
                 Select = selectFilter,
