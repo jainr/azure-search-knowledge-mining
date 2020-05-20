@@ -47,11 +47,11 @@ function AuthenticateResultsMap(results) {
 
             // Authenticate the map using the key 
             resultsMap = new atlas.Map('myMap', {
-                renderWorldCopies: true,
                 autoResize: true,
+                renderWorldCopies: true,
                 center: coordinates,
                 visibility: "visible",
-                zoom: 4,
+                zoom: 1.42,
                 minZoom: 1.42,
                 width: "500px",
                 height: "500px",
@@ -165,7 +165,8 @@ function AddMapPoints(results) {
                 closeButton: false
             });
 
-            resultsMap.events.add('mouseenter', clusterBubbleLayer, function (e) {
+            resultsMap.events.add('mouseenter', symbolLayer2, function (e) {
+                //alert(Object.keys(e.shapes[0].properties));
                 symbolLayer2.setOptions({
                     textOptions: {
                         textField: ['get', 'point_count_abbreviated'],
@@ -176,7 +177,7 @@ function AddMapPoints(results) {
 
             });
 
-            resultsMap.events.add('mouseleave', clusterBubbleLayer, function () {
+            resultsMap.events.add('mouseleave', clusterBubbleLayer, function (e) {
                 symbolLayer2.setOptions({
                     textOptions: {
                         textField: ['get', 'point_count_abbreviated'],
