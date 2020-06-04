@@ -375,17 +375,22 @@ pre {
 }
 
 .results-body {
-    padding-left: 0;
+    padding-left: 20px;
     padding-right: 0;
+    padding-bottom: 100%;
+    margin-bottom: -100%;
 }
 
 .results-icon {
     padding-left: 0;
     padding-right: 0;
     text-align: center;
-    width: 30px;
-    height: 40px;
-    margin-top: 10px;
+    width: 60px;
+    height: 60px;
+    margin-top: -5px;
+    margin-left: -5px;
+    margin-right: 0px;
+    margin-bottom: 0px;
     line-height: 1.1;
 }
 

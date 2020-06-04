@@ -292,24 +292,28 @@ function UpdateResults(data) {
         var title;
 
         result.idx = i;
-
+        //gets document by this field ShowDocument (id)
         var id = result[data.idField];
 
         var tags = GetTagsHTML(result);
         var path;
+        
 
         // get path
+        //Path of img / pdf / etc
+        //decodes the path and adds access token.
         if (data.isPathBase64Encoded) {
             path = Base64Decode(result.metadata_storage_path) + token;
         }
         else {
             path = result.metadata_storage_path + token;
         }
-
+        //gets name of file
+        //result.metadata_storage_name = filname.pdf or filename.jpg
         if (result["metadata_storage_name"] !== undefined) {
             name = result.metadata_storage_name.split(".")[0];
         }
-
+        //this is none existant on azure
         if (result["metadata_title"] !== undefined && result["metadata_title"] !== null) {
             title = result.metadata_title;
         }
@@ -319,12 +323,17 @@ function UpdateResults(data) {
             name = "";
         }
 
+        var thumbnail_size_ext = "_300xN.jpg";
+        var thumbnail_path = "https://kmogstorage.blob.core.windows.net/kmdocument/THUMBNAILS/";
+        var filename = result.metadata_storage_name.split(".")[0];
+        var thumb_path = thumbnail_path + filename + thumbnail_size_ext + token;
+
         if (path !== null) {
             var classList = "results-div ";
             if (i === 0) classList += "results-sizer";
 
             var pathLower = path.toLowerCase();
-
+            //sets result for images
             if (pathLower.includes(".jpg") || pathLower.includes(".png")) {
                 resultsHtml += `<div class="${classList}" onclick="ShowDocument('${id}');">
                                     <div class="search-result">
@@ -336,6 +345,7 @@ function UpdateResults(data) {
                                     </div>
                                 </div>`;
             }
+            //sets results for .mp3
             else if (pathLower.includes(".mp3")) {
                 resultsHtml += `<div class="${classList}" onclick="ShowDocument('${id}');">
                                     <div class="search-result">
@@ -352,6 +362,7 @@ function UpdateResults(data) {
                                     </div>
                                 </div>`;
             }
+                //sets path for .mp4
             else if (pathLower.includes(".mp4")) {
                 resultsHtml += `<div class="${classList}" onclick="ShowDocument('${id}');">
                                     <div class="search-result">
@@ -371,7 +382,7 @@ function UpdateResults(data) {
             }
             else {
                 var icon = " ms-Icon--Page";
-
+                //pdf icon class ref "magic"
                 if (pathLower.includes(".pdf")) {
                     icon = "ms-Icon--PDF";
                 }
@@ -390,15 +401,16 @@ function UpdateResults(data) {
                 else if (pathLower.includes(".xls")) {
                     icon = "ms-Icon--ExcelDocument";
                 }
-
+                //creates html results for icons
+                //icon        <i class="html-icon ms-Icon ${icon}"></i>
                 resultsHtml += `<div class="${classList}" onclick="ShowDocument('${id}');">
                                     <div class="search-result">
-                                       <div class="results-icon col-md-1">
+                                       <div class="results-icon col-md-2">
                                             <div class="ms-CommandButton-icon">
-                                                <i class="html-icon ms-Icon ${icon}"></i>
+                                                <img style='max-width:95%;' src="${thumb_path}" alt="${icon}"/>
                                             </div>
                                         </div>
-                                        <div class="results-body col-md-11">
+                                        <div class="results-body col-md-10">
                                             <h4>${title}</h4>
                                             <h5>${name}</h5>
                                             <div style="margin-top:10px;">${tags}</div>
