@@ -403,11 +403,12 @@ function UpdateResults(data) {
                 }
                 //creates html results for icons
                 //icon        <i class="html-icon ms-Icon ${icon}"></i>
-                resultsHtml += `<div class="${classList}" onclick="ShowDocument('${id}');">
+                let templa1 = `<div class="${classList}" onclick="ShowDocument('${id}');">
                                     <div class="search-result">
                                        <div class="results-icon col-md-2">
                                             <div class="ms-CommandButton-icon">
-                                                <img style='max-width:95%;' src="${thumb_path}" alt="${icon}"/>
+                                                `;
+                let templa2 = `
                                             </div>
                                         </div>
                                         <div class="results-body col-md-10">
@@ -418,6 +419,11 @@ function UpdateResults(data) {
                                         </div>
                                     </div>
                                 </div>`;
+                let imgtag1 = `<img style='max-width:95%;' src="${thumb_path}" onerror="this.style.visibility='hidden'; this.nextElementSibling.style.display='inline-block';"/>`;
+                let icontg1 = `<i class="ms-Icon ${icon}"></i>`;
+                let tempdiv = templa1 + imgtag1 + icontg1 + templa2;
+
+                resultsHtml += tempdiv;
             }
         }
         else {

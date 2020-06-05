@@ -568,9 +568,10 @@ ul.breadcrumb li {
 .ms-Icon {
     position: relative;
     top: 1px;
-    display: inline-block;
+    display: none;
     font-style: normal;
     font-weight: normal;
+    font-size: 200%;
     line-height: 1;
 }
 
