@@ -79,6 +79,7 @@ namespace CognitiveSearch.UI.Controllers
             }
 
             var response = _docSearch.Search(q, searchFacets, selectFilter, currentPage, polygonString);
+            var mapresponse = _docSearch.SearchAll(q, searchFacets, selectFilter, currentPage, polygonString);
             var searchId = _docSearch.GetSearchId().ToString();
             var facetResults = new List<object>();
             var tagsResults = new List<object>();
@@ -112,6 +113,7 @@ namespace CognitiveSearch.UI.Controllers
             return new JsonResult(new DocumentResult
             {
                 Results = (response == null? null : response.Results),
+                Mapresults = (mapresponse == null? null : mapresponse.Results),
                 Facets = facetResults,
                 Tags = tagsResults,
                 Count = (response == null? 0 :  Convert.ToInt32(response.Count)),
@@ -121,6 +123,62 @@ namespace CognitiveSearch.UI.Controllers
                 IsPathBase64Encoded = _isPathBase64Encoded
             });
         }
+
+        // [HttpPost]
+        // public IActionResult GetMapDocuments(string q = "", SearchFacet[] searchFacets = null, int currentPage = 1, string polygonString = null)
+        // {
+        //     var tokens = GetContainerSasUris();
+
+        //     var selectFilter = _docSearch.Model.SelectFilter;
+
+        //     if (!string.IsNullOrEmpty(q))
+        //     {
+        //         q = q.Replace("?", "");
+        //     }
+
+        //     var response = _docSearch.SearchAll(searchFacets, selectFilter, currentPage, polygonString);
+        //     var searchId = _docSearch.GetSearchId().ToString();
+        //     var facetResults = new List<object>();
+        //     var tagsResults = new List<object>();
+
+        //     if (response != null && response.Facets != null)
+        //     {
+        //         // Return only the selected facets from the Search Model
+        //         foreach (var facetResult in response.Facets.Where(f => _docSearch.Model.Facets.Where(x => x.Name == f.Key).Any()))
+        //         {
+        //             var cleanValues = GetCleanFacetValues(facetResult);
+
+        //             facetResults.Add(new
+        //             {
+        //                 key = facetResult.Key,
+        //                 value = cleanValues
+        //             });
+        //         }
+
+        //         foreach (var tagResult in response.Facets.Where(t => _docSearch.Model.Tags.Where(x => x.Name == t.Key).Any()))
+        //         {
+        //             var cleanValues = GetCleanFacetValues(tagResult);
+
+        //             tagsResults.Add(new
+        //             {
+        //                 key = tagResult.Key,
+        //                 value = cleanValues
+        //             });
+        //         }
+        //     }
+
+        //     return new JsonResult(new DocumentResult
+        //     {
+        //         Results = (response == null? null : response.Results),
+        //         Facets = facetResults,
+        //         Tags = tagsResults,
+        //         Count = (response == null? 0 :  Convert.ToInt32(response.Count)),
+        //         SearchId = searchId,
+        //         IdField = _idField,
+        //         Token = tokens[0],
+        //         IsPathBase64Encoded = _isPathBase64Encoded
+        //     });
+        // }
 
         /// <summary>
         /// In some situations you may want to restrict the facets that are displayed in the

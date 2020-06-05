@@ -30,7 +30,7 @@ function GetResultsMapsHTML() {
 }
 
 //  Authenticates the map and shows some locations.
-function AuthenticateResultsMap(results) {
+function AuthenticateResultsMap(mapresults) {
     $.post('/home/getmapcredentials', {},
         function (data) {
 
@@ -43,13 +43,13 @@ function AuthenticateResultsMap(results) {
             $('#maps-viewer').html(mapsContainerHTML);
 
             // default map coordinates
-            var coordinates = [-122.32, 47.60];
+            // var coordinates = [-122.32, 47.60];
 
             // Authenticate the map using the key 
             resultsMap = new atlas.Map('myMap', {
                 autoResize: true,
                 renderWorldCopies: true,
-                center: coordinates,
+                // center: coordinates,
                 visibility: "visible",
                 zoom: 1.42,
                 minZoom: 1.42,
@@ -75,7 +75,7 @@ function AuthenticateResultsMap(results) {
                 });
             });
 
-            AddMapPoints(results);
+            AddMapPoints(mapresults);
 
             return;
         });
@@ -83,16 +83,16 @@ function AuthenticateResultsMap(results) {
 }
 
 // Adds map points and re-centers the map based on results
-function AddMapPoints(results) {
+function AddMapPoints(mapresults) {
     var coordinates;
 
     if (mapDataSource !== null) {
         // clear the data source, add new POIs and re-center the map
         mapDataSource.clear();
-        coordinates = UpdatePOIs(results, mapDataSource);
-        if (coordinates) {
-            resultsMap.setCamera({ center: coordinates });
-        }
+        coordinates = UpdatePOIs(mapresults, mapDataSource);
+        // if (coordinates) {
+        //     resultsMap.setCamera({ center: coordinates });
+        // }
     }
     else {
         //Create a data source to add it to the map 
@@ -101,7 +101,7 @@ function AddMapPoints(results) {
             clusterRadius: 45,
             clusterMaxZoom: 15
         });
-        coordinates = UpdatePOIs(results, mapDataSource);
+        coordinates = UpdatePOIs(mapresults, mapDataSource);
 
         //Wait until the map resources are ready for first set up.
         resultsMap.events.add('ready', function () {
@@ -166,7 +166,6 @@ function AddMapPoints(results) {
             });
 
             resultsMap.events.add('mouseenter', symbolLayer2, function (e) {
-                //alert(Object.keys(e.shapes[0].properties));
                 symbolLayer2.setOptions({
                     textOptions: {
                         textField: ['get', 'point_count_abbreviated'],
@@ -267,10 +266,10 @@ function UpdateMap(data) {
     if (showMap === true) {
         if (resultsMap === null) {
             // Create the map
-            AuthenticateResultsMap(data.results);
+            AuthenticateResultsMap(data.mapresults);
         }
         else {
-            AddMapPoints(results);
+            AddMapPoints(mapresults);
         }
     }
 }
@@ -278,7 +277,7 @@ function UpdateMap(data) {
 function UpdateResults(data) {
     var resultsHtml = '';
 
-    $("#doc-count").html(` Available Results: ${data.count}`);
+    $("#doc-count").html(` Available Results: ${data.count} (${data.mapresults.length} points shown on the map)`);
 
 
 

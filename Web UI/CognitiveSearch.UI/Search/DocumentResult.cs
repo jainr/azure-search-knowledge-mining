@@ -14,6 +14,8 @@ namespace CognitiveSearch.UI
         public List<object> Facets { get; set; }
         public Document Result { get; set; }
         public IList<SearchResult<Document>> Results { get; set; }
+
+        public IList<SearchResult<Document>> Mapresults { get; set; }
         public int? Count { get; set; }
         public string Token { get; set; }
         public string DecodedPath { get; set; }

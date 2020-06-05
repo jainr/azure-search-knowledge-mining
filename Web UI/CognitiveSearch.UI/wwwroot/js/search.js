@@ -80,6 +80,7 @@ function Update(data) {
     facets = data.facets;
     tags = data.tags;
     token = data.token;
+    mapresults = data.mapresults;
 
     searchId = data.searchId;
 

@@ -66,7 +66,7 @@ namespace CognitiveSearch.UI
         {
             try
             {
-                SearchParameters sp = GenerateSearchParameters(searchFacets, selectFilter, currentPage, polygonString);
+                SearchParameters sp = GenerateSearchParameters(searchFacets, selectFilter, currentPage, polygonString, false);
 
                 if (!string.IsNullOrEmpty(telemetryClient.InstrumentationKey))
                 {
@@ -83,14 +83,36 @@ namespace CognitiveSearch.UI
             return null;
         }
 
-        public SearchParameters GenerateSearchParameters(SearchFacet[] searchFacets = null, string[] selectFilter = null, int currentPage = 1, string polygonString = null)
+        public DocumentSearchResult<Document> SearchAll(string searchText, SearchFacet[] searchFacets = null, string[] selectFilter = null, int currentPage = 1, string polygonString = null)
+        {
+            try
+            {
+                SearchParameters sp = GenerateSearchParameters(searchFacets, selectFilter, currentPage, polygonString, true);
+
+                if (!string.IsNullOrEmpty(telemetryClient.InstrumentationKey))
+                {
+                    var s = GenerateSearchId(searchText, sp);
+                    _searchId = s.Result;
+                }
+
+                return _indexClient.Documents.Search(searchText, sp);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error querying index: {0}\r\n", ex.Message.ToString());
+            }
+            return null;
+        }
+
+
+        public SearchParameters GenerateSearchParameters(SearchFacet[] searchFacets = null, string[] selectFilter = null, int currentPage = 1, string polygonString = null, bool isMap = false)
         {
             // For more information on search parameters visit: 
             // https://docs.microsoft.com/en-us/dotnet/api/microsoft.azure.search.models.searchparameters?view=azure-dotnet
             SearchParameters sp = new SearchParameters()
             {
                 SearchMode = SearchMode.All,
-                Top = 200,
+                Top = (isMap == true ? 200 : 20),
                 Skip = (currentPage - 1) * 200,
                 IncludeTotalResultCount = true,
                 QueryType = QueryType.Full,
