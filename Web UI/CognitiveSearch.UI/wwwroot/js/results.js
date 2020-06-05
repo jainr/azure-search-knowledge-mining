@@ -42,14 +42,10 @@ function AuthenticateResultsMap(mapresults) {
             var mapsContainerHTML = GetResultsMapsHTML();
             $('#maps-viewer').html(mapsContainerHTML);
 
-            // default map coordinates
-            // var coordinates = [-122.32, 47.60];
-
             // Authenticate the map using the key 
             resultsMap = new atlas.Map('myMap', {
                 autoResize: true,
                 renderWorldCopies: true,
-                // center: coordinates,
                 visibility: "visible",
                 zoom: 1.42,
                 minZoom: 1.42,
@@ -90,9 +86,6 @@ function AddMapPoints(mapresults) {
         // clear the data source, add new POIs and re-center the map
         mapDataSource.clear();
         coordinates = UpdatePOIs(mapresults, mapDataSource);
-        // if (coordinates) {
-        //     resultsMap.setCamera({ center: coordinates });
-        // }
     }
     else {
         //Create a data source to add it to the map 
@@ -277,7 +270,7 @@ function UpdateMap(data) {
 function UpdateResults(data) {
     var resultsHtml = '';
 
-    $("#doc-count").html(` Available Results: ${data.count} (${data.mapresults.length} points shown on the map)`);
+    $("#doc-count").html(` Available Results: ${data.count}`);
 
 
 

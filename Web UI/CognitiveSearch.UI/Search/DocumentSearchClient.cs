@@ -36,6 +36,10 @@ namespace CognitiveSearch.UI
 
         public static string errorMessage;
 
+        public static int mapResults = 200;
+
+        public static int docResults = 20;
+
         public DocumentSearchClient(IConfiguration configuration)
         {
             try
@@ -112,8 +116,8 @@ namespace CognitiveSearch.UI
             SearchParameters sp = new SearchParameters()
             {
                 SearchMode = SearchMode.All,
-                Top = (isMap == true ? 200 : 20),
-                Skip = (currentPage - 1) * 200,
+                Top = (isMap == true ? mapResults : docResults),
+                Skip = (currentPage - 1) * mapResults,
                 IncludeTotalResultCount = true,
                 QueryType = QueryType.Full,
                 Select = selectFilter,
