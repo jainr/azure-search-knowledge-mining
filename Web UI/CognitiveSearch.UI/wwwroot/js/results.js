@@ -424,6 +424,24 @@ function UpdateResults(data) {
                 let tempdiv = templa1 + imgtag1 + icontg1 + templa2;
 
                 resultsHtml += tempdiv;
+
+
+
+                //resultsHtml += `<div class="${classList}" onclick="ShowDocument('${id}');">
+                //                    <div class="search-result">
+                //                       <div class="results-icon col-md-2">
+                //                            <div class="ms-CommandButton-icon">
+                //                                <img style='max-width:95%;' src="${thumb_path}" alt="${icon}"/>
+                //                            </div>
+                //                        </div>
+                //                        <div class="results-body col-md-10">
+                //                            <h4>${title}</h4>
+                //                            <h5>${name}</h5>
+                //                            <div style="margin-top:10px;">${tags}</div>
+                //                            <div>Score: ${score}</div>
+                //                        </div>
+                //                    </div>
+                //                </div>`;
             }
         }
         else {
