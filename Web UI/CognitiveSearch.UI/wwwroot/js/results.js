@@ -323,18 +323,18 @@ function UpdateResults(data) {
             name = "";
         }
 
-        var thumbnail_size_ext = "_300xN.jpg";
-        var thumbnail_path = "https://kmogstorage.blob.core.windows.net/kmdocument/THUMBNAILS/";
+        var thumbnail_ext = "_thumbnail.jpg";
+        let path_arr = path.split('/');
+        let thumbnail_path = path_arr[0] + '//' + path_arr[2] + '/' + path_arr[3] + '/' + 'THUMBNAILS' + '/'
         var filename = result.metadata_storage_name.split(".")[0];
-        var thumb_path = thumbnail_path + filename + thumbnail_size_ext + token;
+        var thumb_path = thumbnail_path + filename + thumbnail_ext + token;
 
         if (path !== null) {
             var classList = "results-div ";
             if (i === 0) classList += "results-sizer";
 
             var pathLower = path.toLowerCase();
-            //sets result for images
-            if (pathLower.includes(".jpg") || pathLower.includes(".png")) {
+            if (pathLower.includes(".jpg") || pathLower.includes(".png") || pathLower.includes(".gif")) {
                 resultsHtml += `<div class="${classList}" onclick="ShowDocument('${id}');">
                                     <div class="search-result">
                                         <img class="img-result" style='max-width:100%;' src="${path}"/>
@@ -345,7 +345,6 @@ function UpdateResults(data) {
                                     </div>
                                 </div>`;
             }
-            //sets results for .mp3
             else if (pathLower.includes(".mp3")) {
                 resultsHtml += `<div class="${classList}" onclick="ShowDocument('${id}');">
                                     <div class="search-result">
@@ -362,7 +361,6 @@ function UpdateResults(data) {
                                     </div>
                                 </div>`;
             }
-                //sets path for .mp4
             else if (pathLower.includes(".mp4")) {
                 resultsHtml += `<div class="${classList}" onclick="ShowDocument('${id}');">
                                     <div class="search-result">
@@ -403,12 +401,12 @@ function UpdateResults(data) {
                 }
                 //creates html results for icons
                 //icon        <i class="html-icon ms-Icon ${icon}"></i>
-                let templa1 = `<div class="${classList}" onclick="ShowDocument('${id}');">
+                let templateStart = `<div class="${classList}" onclick="ShowDocument('${id}');">
                                     <div class="search-result">
                                        <div class="results-icon col-md-2">
                                             <div class="ms-CommandButton-icon">
                                                 `;
-                let templa2 = `
+                let templateEnd = `
                                             </div>
                                         </div>
                                         <div class="results-body col-md-10">
@@ -419,14 +417,11 @@ function UpdateResults(data) {
                                         </div>
                                     </div>
                                 </div>`;
-                let imgtag1 = `<img style='max-width:95%;' src="${thumb_path}" onerror="this.style.visibility='hidden'; this.nextElementSibling.style.display='inline-block';"/>`;
-                let icontg1 = `<i class="ms-Icon ${icon}"></i>`;
-                let tempdiv = templa1 + imgtag1 + icontg1 + templa2;
+                let imageTag = `<img style='max-width:95%;' src="${thumb_path}" onerror="this.style.visibility='hidden'; this.nextElementSibling.style.display='inline-block';"/>`;
+                let iconTag = `<i class="ms-Icon ${icon}"></i>`;
+                let templateDiv = templateStart + imageTag + iconTag + templateEnd;
 
-                resultsHtml += tempdiv;
-
-
-
+                resultsHtml += templateDiv;
                 //resultsHtml += `<div class="${classList}" onclick="ShowDocument('${id}');">
                 //                    <div class="search-result">
                 //                       <div class="results-icon col-md-2">

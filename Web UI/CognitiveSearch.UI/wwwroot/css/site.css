@@ -66,7 +66,6 @@ audio {
     border: none;
     height: 30px;
     width: 100px;
-    left: 20px;
 }
 
 .recentsearch {
@@ -388,10 +387,11 @@ pre {
     text-align: center;
     width: 60px;
     height: 60px;
-    margin-top: -5px;
-    margin-left: -5px;
-    margin-right: 0px;
-    margin-bottom: 0px;
+    margin: -5px 0px 0px -5px;
+    /*margin-top: -5px;*/
+    /*margin-left: -5px;*/
+    /*margin-right: 0px;*/
+    /*margin-bottom: 0px;*/
     line-height: 1.1;
 }
 
@@ -572,9 +572,11 @@ ul.breadcrumb li {
     display: none;
     font-style: normal;
     font-weight: normal;
-    font-size: 200%;
+    font-size: 325%;
     line-height: 1;
+    margin: 2px 0px 0px 2px;
 }
+
 
 .node {
 }
