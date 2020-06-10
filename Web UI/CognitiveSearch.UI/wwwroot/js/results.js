@@ -310,7 +310,18 @@ function UpdateResults(data) {
         var thumbnail_ext = "_thumbnail.jpg";
         let path_arr = path.split('/');
         let thumbnail_path = path_arr[0] + '//' + path_arr[2] + '/' + path_arr[3] + '/' + 'THUMBNAILS' + '/'
-        var filename = result.metadata_storage_name.split(".")[0];
+        let filename = '';
+        let filenameArray = result.metadata_storage_name.split(".");
+        if (filenameArray.length > 2) {
+            for (let i = 0; i < filenameArray.length - 1; i++) {
+                filename += filenameArray[i];
+            }
+        }
+        else {
+            filename = result.metadata_storage_name.split(".")[0];
+        }
+
+        filename = filename.split("%2C").join("");
         var thumb_path = thumbnail_path + filename + thumbnail_ext + token;
 
         if (path !== null) {
