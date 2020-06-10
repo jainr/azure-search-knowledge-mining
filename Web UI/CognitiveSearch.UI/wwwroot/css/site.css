@@ -307,7 +307,7 @@ h1, h2, h3, h4, h5 {
 }
 
 .navbar {
-    margin-bottom: 0;
+    margin: 0px 0px 0px 0px;
     border-bottom: 1px solid #959595;
 }
 
@@ -330,7 +330,7 @@ h1, h2, h3, h4, h5 {
 .navbar-user {
     float: right;
     vertical-align: middle;
-    margin-top: 15px;
+    margin: 15px 0px 0px 0px;
     width: auto;
 }
 
@@ -375,8 +375,7 @@ pre {
 }
 
 .results-body {
-    padding-left: 20px;
-    padding-right: 0;
+    padding: 0px 0px 0px 20px;
     padding-bottom: 100%;
     margin-bottom: -100%;
 }
@@ -388,10 +387,6 @@ pre {
     width: 60px;
     height: 60px;
     margin: -5px 0px 0px -5px;
-    /*margin-top: -5px;*/
-    /*margin-left: -5px;*/
-    /*margin-right: 0px;*/
-    /*margin-bottom: 0px;*/
     line-height: 1.1;
 }
 

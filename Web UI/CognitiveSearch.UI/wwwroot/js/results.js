@@ -292,28 +292,20 @@ function UpdateResults(data) {
         var title;
 
         result.idx = i;
-        //gets document by this field ShowDocument (id)
         var id = result[data.idField];
 
         var tags = GetTagsHTML(result);
         var path;
         
-
-        // get path
-        //Path of img / pdf / etc
-        //decodes the path and adds access token.
         if (data.isPathBase64Encoded) {
             path = Base64Decode(result.metadata_storage_path) + token;
         }
         else {
             path = result.metadata_storage_path + token;
         }
-        //gets name of file
-        //result.metadata_storage_name = filname.pdf or filename.jpg
         if (result["metadata_storage_name"] !== undefined) {
             name = result.metadata_storage_name.split(".")[0];
         }
-        //this is none existant on azure
         if (result["metadata_title"] !== undefined && result["metadata_title"] !== null) {
             title = result.metadata_title;
         }
@@ -380,7 +372,6 @@ function UpdateResults(data) {
             }
             else {
                 var icon = " ms-Icon--Page";
-                //pdf icon class ref "magic"
                 if (pathLower.includes(".pdf")) {
                     icon = "ms-Icon--PDF";
                 }
@@ -399,8 +390,6 @@ function UpdateResults(data) {
                 else if (pathLower.includes(".xls")) {
                     icon = "ms-Icon--ExcelDocument";
                 }
-                //creates html results for icons
-                //icon        <i class="html-icon ms-Icon ${icon}"></i>
                 let templateStart = `<div class="${classList}" onclick="ShowDocument('${id}');">
                                     <div class="search-result">
                                        <div class="results-icon col-md-2">
@@ -422,21 +411,6 @@ function UpdateResults(data) {
                 let templateDiv = templateStart + imageTag + iconTag + templateEnd;
 
                 resultsHtml += templateDiv;
-                //resultsHtml += `<div class="${classList}" onclick="ShowDocument('${id}');">
-                //                    <div class="search-result">
-                //                       <div class="results-icon col-md-2">
-                //                            <div class="ms-CommandButton-icon">
-                //                                <img style='max-width:95%;' src="${thumb_path}" alt="${icon}"/>
-                //                            </div>
-                //                        </div>
-                //                        <div class="results-body col-md-10">
-                //                            <h4>${title}</h4>
-                //                            <h5>${name}</h5>
-                //                            <div style="margin-top:10px;">${tags}</div>
-                //                            <div>Score: ${score}</div>
-                //                        </div>
-                //                    </div>
-                //                </div>`;
             }
         }
         else {
