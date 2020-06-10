@@ -124,13 +124,13 @@ function UpdatePagination(docCount) {
 
     var htmlString = "";
     if (currentPage > 1) {
-        htmlString = `<li><a href="javascript:void(0)" onclick="GoToPage('${backPage}')" class="ms-Icon ms-Icon--ChevronLeftMed" style="display:inline-block; font-size:100%;"></a></li>`;
+        htmlString = `<li><a href="javascript:void(0)" onclick="GoToPage('${backPage}')" class="ms-Icon ms-Icon--ChevronLeftMed" style="display:inline-block; font-size:100%; margin: -1px 0px 0px 0px;"></a></li>`;
     }
 
     htmlString += '<li class="active"><a href="#">' + currentPage + '</a></li>';
 
     if (currentPage <= totalPages) {
-        htmlString += `<li><a href="javascript:void(0)" onclick="GoToPage('${forwardPage}')" class="ms-Icon ms-Icon--ChevronRightMed" style="display: inline-block; font-size: 100%;"></a></li>`;
+        htmlString += `<li><a href="javascript:void(0)" onclick="GoToPage('${forwardPage}')" class="ms-Icon ms-Icon--ChevronRightMed" style="display: inline-block; font-size: 100%; margin: -1px 0px 0px 0px;"></a></li>`;
     }
     $("#pagination").html(htmlString);
     $("#paginationFooter").html(htmlString);
