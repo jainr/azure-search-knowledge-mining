@@ -110,7 +110,7 @@ function Update(data) {
 }
 
 function UpdatePagination(docCount) {
-    var totalPages = Math.round(docCount / 10);
+    var totalPages = Math.round(docCount / 20);
     // Set a max of 5 items and set the current page in middle of pages
     var startPage = currentPage;
 
@@ -129,7 +129,7 @@ function UpdatePagination(docCount) {
 
     htmlString += '<li class="active"><a href="#">' + currentPage + '</a></li>';
 
-    if (currentPage <= totalPages) {
+    if (currentPage < totalPages) {
         htmlString += `<li><a href="javascript:void(0)" onclick="GoToPage('${forwardPage}')" class="ms-Icon ms-Icon--ChevronRightMed" style="display: inline-block; font-size: 100%; margin: -1px 0px 0px 0px;"></a></li>`;
     }
     $("#pagination").html(htmlString);
