@@ -284,24 +284,20 @@ function UpdateResults(data) {
         var title;
 
         result.idx = i;
-
         var id = result[data.idField];
 
         var tags = GetTagsHTML(result);
         var path;
-
-        // get path
+        
         if (data.isPathBase64Encoded) {
             path = Base64Decode(result.metadata_storage_path) + token;
         }
         else {
             path = result.metadata_storage_path + token;
         }
-
         if (result["metadata_storage_name"] !== undefined) {
             name = result.metadata_storage_name.split(".")[0];
         }
-
         if (result["metadata_title"] !== undefined && result["metadata_title"] !== null) {
             title = result.metadata_title;
         }
@@ -311,13 +307,29 @@ function UpdateResults(data) {
             name = "";
         }
 
+        var thumbnail_ext = "_thumbnail.jpg";
+        let path_arr = path.split('/');
+        let thumbnail_path = path_arr[0] + '//' + path_arr[2] + '/' + path_arr[3] + '/' + 'THUMBNAILS' + '/'
+        let filename = '';
+        let filenameArray = result.metadata_storage_name.split(".");
+        if (filenameArray.length > 2) {
+            for (let i = 0; i < filenameArray.length - 1; i++) {
+                filename += filenameArray[i];
+            }
+        }
+        else {
+            filename = result.metadata_storage_name.split(".")[0];
+        }
+
+        filename = filename.split("%2C").join("");
+        var thumb_path = thumbnail_path + filename + thumbnail_ext + token;
+
         if (path !== null) {
             var classList = "results-div ";
             if (i === 0) classList += "results-sizer";
 
             var pathLower = path.toLowerCase();
-
-            if (pathLower.includes(".jpg") || pathLower.includes(".png")) {
+            if (pathLower.includes(".jpg") || pathLower.includes(".png") || pathLower.includes(".gif")) {
                 resultsHtml += `<div class="${classList}" onclick="ShowDocument('${id}');">
                                     <div class="search-result">
                                         <img class="img-result" style='max-width:100%;' src="${path}"/>
@@ -363,7 +375,6 @@ function UpdateResults(data) {
             }
             else {
                 var icon = " ms-Icon--Page";
-
                 if (pathLower.includes(".pdf")) {
                     icon = "ms-Icon--PDF";
                 }
@@ -382,15 +393,15 @@ function UpdateResults(data) {
                 else if (pathLower.includes(".xls")) {
                     icon = "ms-Icon--ExcelDocument";
                 }
-
-                resultsHtml += `<div class="${classList}" onclick="ShowDocument('${id}');">
+                let templateStart = `<div class="${classList}" onclick="ShowDocument('${id}');">
                                     <div class="search-result">
-                                       <div class="results-icon col-md-1">
+                                       <div class="results-icon col-md-2">
                                             <div class="ms-CommandButton-icon">
-                                                <i class="html-icon ms-Icon ${icon}"></i>
+                                                `;
+                let templateEnd = `
                                             </div>
                                         </div>
-                                        <div class="results-body col-md-11">
+                                        <div class="results-body col-md-10">
                                             <h4>${title}</h4>
                                             <h5>${name}</h5>
                                             <div style="margin-top:10px;">${tags}</div>
@@ -398,6 +409,11 @@ function UpdateResults(data) {
                                         </div>
                                     </div>
                                 </div>`;
+                let imageTag = `<img style='max-width:95%;' src="${thumb_path}" onerror="this.style.visibility='hidden'; this.nextElementSibling.style.display='inline-block';"/>`;
+                let iconTag = `<i class="ms-Icon ${icon}"></i>`;
+                let templateDiv = templateStart + imageTag + iconTag + templateEnd;
+
+                resultsHtml += templateDiv;
             }
         }
         else {

@@ -117,7 +117,7 @@ namespace CognitiveSearch.UI
             {
                 SearchMode = SearchMode.All,
                 Top = (isMap == true ? mapResults : docResults),
-                Skip = (currentPage - 1) * mapResults,
+                Skip = (isMap == true ? (currentPage - 1)/10 * mapResults : (currentPage - 1) * docResults),
                 IncludeTotalResultCount = true,
                 QueryType = QueryType.Full,
                 Select = selectFilter,
