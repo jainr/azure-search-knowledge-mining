@@ -79,7 +79,6 @@ namespace CognitiveSearch.UI.Controllers
             }
 
             var response = _docSearch.Search(q, searchFacets, selectFilter, currentPage, polygonString);
-            var mapresponse = _docSearch.SearchAll(q, searchFacets, selectFilter, currentPage, polygonString);
             var searchId = _docSearch.GetSearchId().ToString();
             var facetResults = new List<object>();
             var tagsResults = new List<object>();
@@ -113,7 +112,6 @@ namespace CognitiveSearch.UI.Controllers
             return new JsonResult(new DocumentResult
             {
                 Results = (response == null? null : response.Results),
-                Mapresults = (mapresponse == null? null : mapresponse.Results),
                 Facets = facetResults,
                 Tags = tagsResults,
                 Count = (response == null? 0 :  Convert.ToInt32(response.Count)),

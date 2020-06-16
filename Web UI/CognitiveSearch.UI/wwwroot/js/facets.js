@@ -27,7 +27,7 @@ function UpdateFilterReset() {
                     }
                     )[0]);
 
-                    htmlString += item2 + ` <a href="javascript:void(0)" onclick="RemoveFilter(\'${name}\', \'${item2}'\)"><span class="ms-Icon ms-Icon--Clear" style="display:inline-block; font-size: 100%;"></span></a><br>`;
+                    htmlString += item2 + ` <a href="javascript:void(0)" onclick="RemoveFilter(\'${name}\', \'${item2}'\)"><span class="ms-Icon ms-Icon--Clear"></span></a><br>`;
                     $('#' + name + '_' + idx).addClass('is-checked');
                 });
             }

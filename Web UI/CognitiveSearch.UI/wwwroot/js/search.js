@@ -80,7 +80,6 @@ function Update(data) {
     facets = data.facets;
     tags = data.tags;
     token = data.token;
-    mapresults = data.mapresults;
 
     searchId = data.searchId;
 
@@ -110,7 +109,7 @@ function Update(data) {
 }
 
 function UpdatePagination(docCount) {
-    var totalPages = Math.round(docCount / 20);
+    var totalPages = Math.round(docCount / 10);
     // Set a max of 5 items and set the current page in middle of pages
     var startPage = currentPage;
 
@@ -124,13 +123,13 @@ function UpdatePagination(docCount) {
 
     var htmlString = "";
     if (currentPage > 1) {
-        htmlString = `<li><a href="javascript:void(0)" onclick="GoToPage('${backPage}')" class="ms-Icon ms-Icon--ChevronLeftMed" style="display:inline-block; font-size:100%; margin: -1px 0px 0px 0px;"></a></li>`;
+        htmlString = `<li><a href="javascript:void(0)" onclick="GoToPage('${backPage}')" class="ms-Icon ms-Icon--ChevronLeftMed"></a></li>`;
     }
 
     htmlString += '<li class="active"><a href="#">' + currentPage + '</a></li>';
 
-    if (currentPage < totalPages) {
-        htmlString += `<li><a href="javascript:void(0)" onclick="GoToPage('${forwardPage}')" class="ms-Icon ms-Icon--ChevronRightMed" style="display: inline-block; font-size: 100%; margin: -1px 0px 0px 0px;"></a></li>`;
+    if (currentPage <= totalPages) {
+        htmlString += `<li><a href="javascript:void(0)" onclick="GoToPage('${forwardPage}')" class="ms-Icon ms-Icon--ChevronRightMed"></a></li>`;
     }
     $("#pagination").html(htmlString);
     $("#paginationFooter").html(htmlString);

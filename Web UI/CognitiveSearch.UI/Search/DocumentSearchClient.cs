@@ -36,10 +36,6 @@ namespace CognitiveSearch.UI
 
         public static string errorMessage;
 
-        public static int mapResults = 200;
-
-        public static int docResults = 20;
-
         public DocumentSearchClient(IConfiguration configuration)
         {
             try
@@ -70,7 +66,7 @@ namespace CognitiveSearch.UI
         {
             try
             {
-                SearchParameters sp = GenerateSearchParameters(searchFacets, selectFilter, currentPage, polygonString, false);
+                SearchParameters sp = GenerateSearchParameters(searchFacets, selectFilter, currentPage, polygonString);
 
                 if (!string.IsNullOrEmpty(telemetryClient.InstrumentationKey))
                 {
@@ -87,37 +83,15 @@ namespace CognitiveSearch.UI
             return null;
         }
 
-        public DocumentSearchResult<Document> SearchAll(string searchText, SearchFacet[] searchFacets = null, string[] selectFilter = null, int currentPage = 1, string polygonString = null)
-        {
-            try
-            {
-                SearchParameters sp = GenerateSearchParameters(searchFacets, selectFilter, currentPage, polygonString, true);
-
-                if (!string.IsNullOrEmpty(telemetryClient.InstrumentationKey))
-                {
-                    var s = GenerateSearchId(searchText, sp);
-                    _searchId = s.Result;
-                }
-
-                return _indexClient.Documents.Search(searchText, sp);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error querying index: {0}\r\n", ex.Message.ToString());
-            }
-            return null;
-        }
-
-
-        public SearchParameters GenerateSearchParameters(SearchFacet[] searchFacets = null, string[] selectFilter = null, int currentPage = 1, string polygonString = null, bool isMap = false)
+        public SearchParameters GenerateSearchParameters(SearchFacet[] searchFacets = null, string[] selectFilter = null, int currentPage = 1, string polygonString = null)
         {
             // For more information on search parameters visit: 
             // https://docs.microsoft.com/en-us/dotnet/api/microsoft.azure.search.models.searchparameters?view=azure-dotnet
             SearchParameters sp = new SearchParameters()
             {
                 SearchMode = SearchMode.All,
-                Top = (isMap == true ? mapResults : docResults),
-                Skip = (isMap == true ? (currentPage - 1)/10 * mapResults : (currentPage - 1) * docResults),
+                Top = 10,
+                Skip = (currentPage - 1) * 10,
                 IncludeTotalResultCount = true,
                 QueryType = QueryType.Full,
                 Select = selectFilter,
