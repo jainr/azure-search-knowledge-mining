@@ -27,7 +27,9 @@ function ShowDocument(id) {
             var fileContainerHTML = GetFileHTML(path);
 
             // Transcript Tab Content
-            var transcriptContainerHTML = GetTranscriptHTML(result);
+            if (result.content !== null) {
+                var transcriptContainerHTML = GetTranscriptHTML(result);
+            }
 
             // Metadata Tab Content 
             var metadataContainerHTML = GetMetadataHTML(result);
@@ -78,7 +80,7 @@ function ShowDocument(id) {
 
             pivotLinksHTML += '<li id="file-pivot-link" class="ms-Pivot-link is-selected" data-content="file" title="File" tabindex="1">' + fileName + '</li>';
 
-            if (transcriptContainerHTML !== null) {
+            if (transcriptContainerHTML !== null && result.content !== null) {
                 pivotLinksHTML += '<li id="transcript-pivot-link" class="ms-Pivot-link " data-content="transcript" title="Transcript" tabindex="1">Transcript</li>';
             }
 

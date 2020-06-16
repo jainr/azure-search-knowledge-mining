@@ -30,12 +30,11 @@ function GetResultsMapsHTML() {
 }
 
 //  Authenticates the map and shows some locations.
-function AuthenticateResultsMap(results) {
+function AuthenticateResultsMap(mapresults) {
     $.post('/home/getmapcredentials', {},
         function (data) {
 
-            if (data.mapKey === null || data.mapKey === "")
-            {
+            if (data.mapKey === null || data.mapKey === "") {
                 showMap = false;
                 return;
             }
@@ -43,14 +42,13 @@ function AuthenticateResultsMap(results) {
             var mapsContainerHTML = GetResultsMapsHTML();
             $('#maps-viewer').html(mapsContainerHTML);
 
-            // default map coordinates
-            var coordinates = [-122.32, 47.60];
-
             // Authenticate the map using the key 
             resultsMap = new atlas.Map('myMap', {
-                center: coordinates,
+                autoResize: true,
+                renderWorldCopies: true,
                 visibility: "visible",
-                zoom: 4,
+                zoom: 1.42,
+                minZoom: 1.42,
                 width: "500px",
                 height: "500px",
                 style: "road_shaded_relief",
@@ -63,17 +61,17 @@ function AuthenticateResultsMap(results) {
 
             //Wait until the map resources are ready.
             resultsMap.events.add('ready', function () {
-  
+
                 /* Construct a zoom control*/
                 var zoomControl = new atlas.control.ZoomControl();
-      
+
                 /* Add the zoom control to the map*/
                 resultsMap.controls.add(zoomControl, {
                     position: "bottom-right"
-                    });
                 });
+            });
 
-            AddMapPoints(results);
+            AddMapPoints(mapresults);
 
             return;
         });
@@ -81,39 +79,112 @@ function AuthenticateResultsMap(results) {
 }
 
 // Adds map points and re-centers the map based on results
-function AddMapPoints(results) {
+function AddMapPoints(mapresults) {
     var coordinates;
 
     if (mapDataSource !== null) {
         // clear the data source, add new POIs and re-center the map
         mapDataSource.clear();
-        coordinates =  UpdatePOIs(results, mapDataSource);
-        if (coordinates) {
-            resultsMap.setCamera ({ center: coordinates });
-        }
+        coordinates = UpdatePOIs(mapresults, mapDataSource);
     }
     else {
         //Create a data source to add it to the map 
-        mapDataSource = new atlas.source.DataSource();
-        coordinates = UpdatePOIs(results, mapDataSource);
-        
+        mapDataSource = new atlas.source.DataSource(null, {
+            cluster: true,
+            clusterRadius: 45,
+            clusterMaxZoom: 15
+        });
+        coordinates = UpdatePOIs(mapresults, mapDataSource);
+
         //Wait until the map resources are ready for first set up.
         resultsMap.events.add('ready', function () {
+            resultsMap.imageSprite.add('bubble-icon', '../images/single_bubble.png');
 
             //take the last coordinates.
-            if (coordinates) { resultsMap.setCamera ({ center: coordinates }); }
+            if (coordinates) { resultsMap.setCamera({ center: coordinates }); }
 
             //Add data source and create a symbol layer.
             resultsMap.sources.add(mapDataSource);
-            var symbolLayer = new atlas.layer.SymbolLayer(mapDataSource);
-            resultsMap.layers.add(symbolLayer);
+
+            //Create a bubble layer for rendering clustered data points.
+            var clusterBubbleLayer = new atlas.layer.BubbleLayer(mapDataSource, null, {
+                opacity: 0.7,
+                radius: [
+                    'interpolate',
+                    ['linear'],
+                    ['get', 'point_count'],
+                    2, 10,
+                    50, 35,
+                ],
+
+                color: [
+                    'interpolate',
+                    ['linear'],
+                    ['get', 'point_count'],
+                    0, 'rgba(255, 108, 92, 1)',
+                    50, 'rgba(255, 108, 92, 1)',
+                    100, 'rgba(255, 108, 92, 1)'
+                ],
+
+                strokeWidth: 0,
+                filter: ['has', 'point_count']
+            });
+
+            var symbolLayer = new atlas.layer.SymbolLayer(mapDataSource, null, {
+                iconOptions: {
+                    image: 'bubble-icon',
+                    size: 0.3
+                },
+                textOptions: {
+                    offset: [0, -.33]
+                },
+                filter: ['!', ['has', 'point_count']]
+            });
+
+            var symbolLayer2 = new atlas.layer.SymbolLayer(mapDataSource, null, {
+                iconOptions: {
+                    image: 'none'
+                }
+            });
+
+            resultsMap.layers.add([
+                clusterBubbleLayer,
+                symbolLayer2,
+                symbolLayer
+            ]);
+
+            clusterPopup = new atlas.Popup({
+                pixelOffset: [0, 0],
+                closeButton: false
+            });
+
+            resultsMap.events.add('mouseenter', symbolLayer2, function (e) {
+                symbolLayer2.setOptions({
+                    textOptions: {
+                        textField: ['get', 'point_count_abbreviated'],
+                        offset: [0, 0.4], 
+                        opacity: 1
+                    }
+                });
+
+            });
+
+            resultsMap.events.add('mouseleave', clusterBubbleLayer, function (e) {
+                symbolLayer2.setOptions({
+                    textOptions: {
+                        textField: ['get', 'point_count_abbreviated'],
+                        offset: [0, 0.4],
+                        opacity: 0
+                    }
+                });
+            });
 
             //Create a popup but leave it closed so we can update it and display it later.
             popup = new atlas.Popup({
                 pixelOffset: [0, -18],
                 closeButton: false
             });
-            
+
             //Add a hover event to the symbol layer.
             resultsMap.events.add('click', symbolLayer, function (e) {
                 //Make sure that the point exists.
@@ -141,8 +212,7 @@ function AddMapPoints(results) {
                         //Open the popup.
                         popup.open(resultsMap);
                     }
-                    else
-                    {
+                    else {
                         popup.close();
                     }
                 }
@@ -189,10 +259,10 @@ function UpdateMap(data) {
     if (showMap === true) {
         if (resultsMap === null) {
             // Create the map
-            AuthenticateResultsMap(data.results);
+            AuthenticateResultsMap(data.mapresults);
         }
         else {
-            AddMapPoints(results);
+            AddMapPoints(mapresults);
         }
     }
 }
@@ -211,27 +281,23 @@ function UpdateResults(data) {
         var score = data.results[i]["@search.score"];
         score = score.toFixed(2);
         var name;
-        var title; 
+        var title;
 
         result.idx = i;
-
-        var id = result[data.idField]; 
+        var id = result[data.idField];
 
         var tags = GetTagsHTML(result);
         var path;
-
-        // get path
+        
         if (data.isPathBase64Encoded) {
             path = Base64Decode(result.metadata_storage_path) + token;
         }
         else {
             path = result.metadata_storage_path + token;
         }
-
         if (result["metadata_storage_name"] !== undefined) {
             name = result.metadata_storage_name.split(".")[0];
         }
-        
         if (result["metadata_title"] !== undefined && result["metadata_title"] !== null) {
             title = result.metadata_title;
         }
@@ -241,13 +307,29 @@ function UpdateResults(data) {
             name = "";
         }
 
+        var thumbnail_ext = "_thumbnail.jpg";
+        let path_arr = path.split('/');
+        let thumbnail_path = path_arr[0] + '//' + path_arr[2] + '/' + path_arr[3] + '/' + 'THUMBNAILS' + '/'
+        let filename = '';
+        let filenameArray = result.metadata_storage_name.split(".");
+        if (filenameArray.length > 2) {
+            for (let i = 0; i < filenameArray.length - 1; i++) {
+                filename += filenameArray[i];
+            }
+        }
+        else {
+            filename = result.metadata_storage_name.split(".")[0];
+        }
+
+        filename = filename.split("%2C").join("");
+        var thumb_path = thumbnail_path + filename + thumbnail_ext + token;
+
         if (path !== null) {
             var classList = "results-div ";
             if (i === 0) classList += "results-sizer";
 
             var pathLower = path.toLowerCase();
-
-            if (pathLower.includes(".jpg") || pathLower.includes(".png")) {
+            if (pathLower.includes(".jpg") || pathLower.includes(".png") || pathLower.includes(".gif")) {
                 resultsHtml += `<div class="${classList}" onclick="ShowDocument('${id}');">
                                     <div class="search-result">
                                         <img class="img-result" style='max-width:100%;' src="${path}"/>
@@ -293,7 +375,6 @@ function UpdateResults(data) {
             }
             else {
                 var icon = " ms-Icon--Page";
-
                 if (pathLower.includes(".pdf")) {
                     icon = "ms-Icon--PDF";
                 }
@@ -312,15 +393,15 @@ function UpdateResults(data) {
                 else if (pathLower.includes(".xls")) {
                     icon = "ms-Icon--ExcelDocument";
                 }
-
-                resultsHtml += `<div class="${classList}" onclick="ShowDocument('${id}');">
+                let templateStart = `<div class="${classList}" onclick="ShowDocument('${id}');">
                                     <div class="search-result">
-                                       <div class="results-icon col-md-1">
+                                       <div class="results-icon col-md-2">
                                             <div class="ms-CommandButton-icon">
-                                                <i class="html-icon ms-Icon ${icon}"></i>
+                                                `;
+                let templateEnd = `
                                             </div>
                                         </div>
-                                        <div class="results-body col-md-11">
+                                        <div class="results-body col-md-10">
                                             <h4>${title}</h4>
                                             <h5>${name}</h5>
                                             <div style="margin-top:10px;">${tags}</div>
@@ -328,6 +409,11 @@ function UpdateResults(data) {
                                         </div>
                                     </div>
                                 </div>`;
+                let imageTag = `<img style='max-width:95%;' src="${thumb_path}" onerror="this.style.visibility='hidden'; this.nextElementSibling.style.display='inline-block';"/>`;
+                let iconTag = `<i class="ms-Icon ${icon}"></i>`;
+                let templateDiv = templateStart + imageTag + iconTag + templateEnd;
+
+                resultsHtml += templateDiv;
             }
         }
         else {
@@ -337,7 +423,7 @@ function UpdateResults(data) {
                                             <h4>Could not get metadata_storage_path for this result.</h4>
                                         </div>
                                     </div>
-                                </div>`; 
+                                </div>`;
         }
     }
 
