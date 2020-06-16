@@ -265,3 +265,4 @@ __pycache__/
 /PublishProfiles/
 *.pubxml
 /.vscode
+appsettings.json
