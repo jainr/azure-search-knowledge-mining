@@ -1,0 +1,51 @@
+@{
+    ViewData["Title"] = "Images";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Pass controller data to view -->
+<script>
+    currentQuery = @Html.Raw(Json.Serialize(TempData["query"]));
+    searchId = @Html.Raw(Json.Serialize(TempData["searchId"]));
+    applicationInstrumentationKey = @Html.Raw(Json.Serialize(TempData["applicationInstrumentationKey"]));
+    var searchmethod = "ImagesSearch";
+</script>
+
+<!--Details Modal-->
+<partial name="_DetailsModal" />
+
+<div id="results-container">
+    <div class="row content-searchinput">
+        <div class="col-md-2" style="display:flex">
+            <button style="width:100%" class="btn btn-default" onclick="OpenSearch()">
+                <img src="~/images/results.jpg" style="height:28px;">
+                <strong> All  </strong>
+            </button>
+        </div>
+        <div class="col-md-6">
+            <div id="search-input-group" class="input-group">
+                    <input type="text" class="form-control typeahead" name="q" id="q" placeholder="Search.." autocomplete="off" spellcheck="true">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" onclick="ImagesSearch();"><span class="ms-Icon ms-Icon--Search" style="display: inline-block; font-size: 100%; margin: -3px 0px 0px -3px;"></span></span></button>
+                </span>
+            </div>
+            <div>
+                <h4 id="doc-count"></h4>
+                <div style="display:inline;position: relative;top:-10px;left:10px;">
+                    <span id="loading-indicator" class="ms-Spinner ms-Spinner--large" style="display:none;"></span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div id="doc-details-div">
+                <div id="progress-indicator" class="ms-Spinner ms-Spinner--large" style="display:none;">
+                    <div class="ms-Spinner-label">Fetching your results...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row content-results">
+        <div class="imagesResults" id="ImagesResultsDiv"></div>
+    </div>
+</div>

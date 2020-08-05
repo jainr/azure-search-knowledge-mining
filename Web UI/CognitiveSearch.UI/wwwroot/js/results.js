@@ -270,15 +270,15 @@ function UpdateMap(data) {
 function UpdateResults(data) {
     var resultsHtml = '';
 
-    $("#doc-count").html(` Available Results: ${data.count}`);
+    $("#doc-count").html(` Available Results: ${data.mapresults.length}`);
 
 
 
-    for (var i = 0; i < data.results.length; i++) {
+    for (var i = 0; i < data.mapresults.length; i++) {
 
-        var result = data.results[i].document;
+        var result = data.mapresults[i].document;
         var searchScore = "@search.score";
-        var score = data.results[i]["@search.score"];
+        var score = data.mapresults[i]["@search.score"];
         score = score.toFixed(2);
         var name;
         var title;
@@ -428,4 +428,76 @@ function UpdateResults(data) {
     }
 
     $("#doc-details-div").html(resultsHtml);
+}
+
+function UpdateImagesResults(data, currentPage) {
+    var resultsHtml = '';
+    $("#doc-count").html(` Available Results: ${data.count}`);
+
+    for (var i = 0; i < data.results.length; i++) {
+
+        var docresult = data.results[i].document;
+
+        docresult.idx = i;
+
+        var id = docresult[data.idField];
+        var name = docresult.metadata_storage_name;
+        var path;
+
+        if (data.isPathBase64Encoded) {
+            path = Base64Decode(docresult.metadata_storage_path) + token;
+        }
+        else {
+            path = docresult.metadata_storage_path + token;
+        }
+
+        var tags = GetTagsHTML(docresult);
+
+        if (path !== null) {
+            var classList = "results-div ";
+            if (i === 0) classList += "results-sizer";
+            var pathLower = path.toLowerCase();
+            var pathExtension = pathLower.split('.').pop();
+
+            //resultsHtml += '<div class="' + classList + '" onclick="ShowDocument(\'' + id + '\',' + docresult.idx + ');">';
+
+            // if (IsEmbeddedImage(docresult.metadata_storage_path)) {
+
+                // var imagename = docresult.metadata_storage_name;
+                // var containerPath = GetParentPathFromImage(docresult);
+                resultsHtml += `<div class="${classList}" onclick = "ShowDocument('${id}');">
+                            <div class="search-result">
+                                <img class="img-result"  style='max-width:100%;' src="${path}"/>';
+                                    <div class="results-header">
+                                    <h4>${name}</h4>
+                                    </div>
+                                </div>
+                            </div>
+                            </div>`;
+        }
+                // resultsHtml += '    <div class="image-result-path" >';
+                // resultsHtml += '        <a target+"_blank" href="' + path + '">' + docresult.image_parentfilename +'</a>';
+                // resultsHtml += '    </div>';
+                // resultsHtml += '</div>';
+            // }
+            // else {
+            //     resultsHtml += '<div class="image-result-div  pt-2 pb-2 pr-2 pl-2">';
+
+            //     resultsHtml += '        <div class="image-result-img" onclick="ShowDocument(\'' + id + '\',' + docresult.idx + ');">';
+            //     resultsHtml += '            <img class="image-result" src="' + path + '" title="' + name + '" />';
+            //     resultsHtml += '        </div>';
+
+            //     resultsHtml += '    <div class="image-result-path" >';
+            //     resultsHtml += '        <a target+"_blank" href="' + containerPath + '">' + docresult.image_parentfilename + '</a>';
+            //     resultsHtml += '    </div>';
+            //     resultsHtml += '</div>';
+            // }
+        }
+
+        // if (currentPage > 1) {
+        //     $("#ImagesResultsDiv").append(resultsHtml);
+        // }
+        // else {
+            $("#ImagesResultsDiv").html(resultsHtml);
+        // }
 }

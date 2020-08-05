@@ -23,16 +23,15 @@ var mapPolygon = null;
 // When 'Enter' clicked from Search Box, execute Search()
 $("#q").keyup(function (e) {
     if (e.keyCode === 13) {
-        Search();
+        // Search();
+        window[searchmethod]();
     }
 });
-
 $("#transcript-search-input").keyup(function (e) {
     if (e.keyCode === 13) {
         SearchTranscript($('#transcript-search-input').val());
     }
 });
-
 // Search with query and facets
 function Search() {
     $('#loading-indicator').show();
@@ -146,3 +145,68 @@ function SampleSearch(text) {
     $('#index-search-submit').click();
 }
 
+// Search with query and facets
+function ImagesSearch() {
+    $('#loading-indicator').show();
+
+    if (currentPage > 1) {
+        if (q != $("#q").val()) {
+            currentPage = 1;
+        }
+    }
+    q = $("#q").val();
+
+
+    //Pass the polygon filter to the query: mapPolygon.data.geometry.coordinates[0][1]
+    var polygonString = "";
+
+    if (mapPolygon !== null && mapPolygon.data !== null && mapPolygon.data.geometry !== null && mapPolygon.data.geometry.coordinates !== null)
+    {
+        var pointArray = mapPolygon.data.geometry.coordinates[0];
+
+        for (var i = 0; i < pointArray.length; i++)
+        {            
+            if (polygonString.length > 0)
+            { polygonString += ","; }
+
+            polygonString += pointArray[i][0] + " " + pointArray[i][1];
+        }
+    }
+
+    // Get center of map to use to score the search results
+    $.post('/home/getimages',
+        {
+            q: q !== undefined ? q : "*",
+            searchFacets: selectedFacets,
+            currentPage: currentPage
+        },
+        function (data) {
+            $('#loading-indicator').css("display", "none");
+            ImagesUpdate(data, currentPage);
+        });
+}
+function ImagesUpdate(data) {
+    results = data.results;
+    facets = data.facets;
+    tags = data.tags;
+    token = data.token;
+    searchId = data.searchId;
+
+    //Facets
+    UpdateFacets();
+    // UpdateDocCount(data);
+    //Results List
+    UpdateImagesResults(data, currentPage);
+    //Pagination
+    UpdatePagination(data.count);
+    // Log Search Events
+    LogSearchAnalytics(data.count);
+    //Filters
+    UpdateFilterReset();
+
+    InitLayout();
+
+    $('html, body').animate({ scrollTop: 0 }, 'fast');
+
+    FabricInit();
+}

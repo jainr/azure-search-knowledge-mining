@@ -127,7 +127,7 @@ audio {
 }
 
 .content-results {
-    padding-top: 25px;
+    padding-top: 5px;
     padding-left: 5%;
     padding-right: 5%;
     position: relative;
@@ -370,12 +370,19 @@ pre {
     overflow-y: scroll;
 }
 
+.all-results-div {
+    /*display: flex;
+    flex-wrap:wrap;*/
+}
+
 .results-div {
     width: 50%;
 }
 
 .results-body {
-    padding: 0px 0px 0px 20px;
+    padding-left: 0;
+    padding-right: 0;
+    /* padding: 0px 0px 0px 20px; */
 }
 
 .results-icon {
@@ -617,4 +624,27 @@ body {
     font-size: 14px;
     font-weight: bold;
     margin-bottom: 5px;
+}
+
+.imagesResults {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+
+.image-result-div{
+}
+
+.image-result {
+    max-width: 400px;
+    max-height: 200px;
+}
+.image-result:hover {
+    box-shadow: 2px 2px 2px 2px #5858584f;
+    cursor:pointer;
+}
+.image-result-path {
+    min-width: 100px;
+    max-width: fit-content;
+    text-overflow:ellipsis;
 }

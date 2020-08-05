@@ -1,4 +1,29 @@
-﻿/*Change based on customer's styling */
+﻿.search-result {
+    background-color: white !important;
+    border-top: solid;
+    border-top-color: #1c3fda;
+}
+
+.search-result:hover {
+    /*background-color: #eee !important;*/
+    background-color: #f3f3f3 !important;
+}
+
+#search-input-group > input {
+    box-shadow: none;
+}
+
+.content-searchinput {
+    padding-top: 15px;
+    padding-left: 5%;
+    padding-right: 5%;
+    position: relative;
+    height: 100%;
+    width: 100%;
+}
+
+
+/*Change based on customer's styling */
 
 /*a {
     color: #787878;

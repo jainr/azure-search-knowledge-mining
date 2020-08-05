@@ -11,9 +11,11 @@
     q = @Html.Raw(Json.Serialize(TempData["query"]));
     searchId = @Html.Raw(Json.Serialize(TempData["searchId"]));
     applicationInstrumentationKey = @Html.Raw(Json.Serialize(TempData["applicationInstrumentationKey"]));
+    var searchmethod = "Search";
 </script>
 
 <!--Details Modal-->
+@* <partial name="_DetailsModal" /> *@
 <div class="modal" id="details-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -51,63 +53,55 @@
         </div>
     </div>
 </div>
-
 <!--Search, Filters, and Facets-->
-<div id="results-container" class="row content-results">
-    <div class="col-md-2">
-        <div id="search-input-group" class="input-group">
-            <input type="text" class="form-control advancedAutoComplete" name="q" id="q" placeholder="Search..." autocomplete="off">
-            <span class="input-group-btn">
-                <button id="search-button" class="btn btn-default" onclick="Search();"><span class="ms-Icon ms-Icon--Search" style="display: inline-block; font-size: 100%; margin: 0px;"></span></button>
-            </span>
+<div id="results-container">
+    <div class="row content-searchinput">
+        <div class="col-md-2" style="display:flex">
+            <button style="width:100%" class="btn btn-default" onclick="OpenImagesSearch()">
+                <img src="~/icons/photo.svg" style="height:28px;">
+                <strong>Image Search</strong>
+            </button>
         </div>
-        <br />
-        <button style="width:100%" class="btn btn-default" onclick="EntityMapClick()">View Entity Map</button>
-        <br />
-        <br />
-        <div>
-            <div id="filterReset"></div>
-            <div class="widget-content">
-                <div id="facet-nav" class="facet-nav"></div>
-            </div>
-        </div>
-    </div>
-
-    <!--Results-->
-    <div class="col-md-10">
-        <div style="margin:0 10px 10px 10px;">
-            <h2 id="doc-count" style="margin-top:-10px; font-size:14px; display:inline"></h2>
-            <div id="maps-viewer"></div>
-            <div style="display:inline;position: relative;top:-10px;left:10px;">
-                <span id="loading-indicator" class="ms-Spinner ms-Spinner--large" style="display:none;"></span>
-            </div>
-        </div>
-        <div id="doc-details-div">
-        </div>
-        <div class="clearfix">
-            <ul id="paginationFooter" class="pagination pull-right"></ul>
-        </div>
-    </div>
-</div>
-
-<div id="entity-map" style="display:none">
-    <div id="results-container" class="row content-results">
-        <div class="col-md-2">
+        <div class="col-md-6">
             <div id="search-input-group" class="input-group">
-                <input type="text" class="form-control" name="e" id="e" placeholder="Search...">
+                <input type="text" class="form-control advancedAutoComplete" name="q" id="q" placeholder="Search..." autocomplete="off">
                 <span class="input-group-btn">
-                    <button class="btn btn-default" onclick="SearchEntities();"><span class="ms-Icon ms-Icon--Search" style="display: inline-block; font-size: 100%; margin: 0px;"></span></button>
+                    <button id="search-button" class="btn btn-default" onclick="Search();"><span class="ms-Icon ms-Icon--Search" style="display: inline-block; font-size: 100%; margin: 0px;"></span></button>
                 </span>
+            </div>
+            <div>
+                <h4 id="doc-count"></h4>
                 <div style="display:inline;position: relative;top:-10px;left:10px;">
-                    <span id="entity-loading-indicator" class="ms-Spinner ms-Spinner--large" style="display:none;"></span>
+                    <span id="loading-indicator" class="ms-Spinner ms-Spinner--large" style="display:none;"></span>
                 </div>
             </div>
-
-            <br />
-            <button style="width:100%" class="btn btn-default" onclick="EntityMapClick()">Return to Search Results</button>
         </div>
-        <svg width="1430" height="600"></svg>
+        <div class="col-md-4">
+        </div>
+    </div>
+    <div class="row content-results">
+        <div class="col-md-2">
+            <div>
+                <div id="filterReset"></div>
+                <div class="widget-content">
+                    <div id="facet-nav" class="facet-nav"></div>
+                </div>
+            </div>
+        </div>
+
+    <!--Results-->
+        <div class="col-md-10">
+            <div style="margin:0 10px 10px 10px;">
+                <h2 id="doc-count" style="margin-top:-10px; font-size:14px; display:inline"></h2>
+                <div id="maps-viewer"></div>
+                <div style="display:inline;position: relative;top:-10px;left:10px;">
+                    <span id="loading-indicator" class="ms-Spinner ms-Spinner--large" style="display:none;"></span>
+            </div>
+            <div id="doc-details-div" class="all-results-div">
+            </div>
+            <div class="clearfix">
+                <ul id="paginationFooter" class="pagination pull-right"></ul>
+            </div>
+        </div>
     </div>
 </div>
-
-

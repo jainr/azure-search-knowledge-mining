@@ -34,6 +34,9 @@ function ShowDocument(id) {
             // Metadata Tab Content 
             var metadataContainerHTML = GetMetadataHTML(result);
 
+            // Embedded Images
+            // var imagesContainerHTML = GetImagesHTML(result);
+
             var fileName = "File";
 
             var pivotsHTML = '          <div id="file-pivot" class="ms-Pivot-content" data-content="file"> ';
@@ -58,6 +61,11 @@ function ShowDocument(id) {
                 pivotsHTML += '                 </div> ';
                 pivotsHTML += '             </div>';
             }
+
+            // pivotsHTML += '<div id="images-pivot" class="ms-Pivot-content" data-content="images">';
+            //     pivotsHTML += '                <div id="images-viewer" style="height: 100%;">';
+            //     pivotsHTML += '                                </div>';
+            //     pivotsHTML += ' </div>';
 
             $('#details-pivot-content').html(pivotsHTML);
 
@@ -376,3 +384,69 @@ function SearchTranscript(searchText) {
         GetReferences(searchText, false);
     }
 }
+
+// function GetImagesHTML(result) {
+
+    // var imagesContainerHTML = '<div>...loading...</div>';
+
+    // $.post('/home/getdocumentembedded',
+    //     {
+    //         id: result.document_driveitemid
+    //     },
+    //     function (data) {
+
+    //         var imagesContainerHTML = '<div>';
+
+    //         // List of embedded images 
+    //         if (data.count > 0) {
+    //             imgresult = data.results;
+
+    //             imagesContainerHTML = '<h5>Found ' + data.count + ' Embedded Images</h5>';
+
+    //             imagesContainerHTML += '<div class="container-fluid">';
+    //             imagesContainerHTML += '<div class="row" style="overflow: hidden;">';
+    //             var tablistHTML = '<div class="col-3" style="overflow-y: auto;height: 85vh;"><div class="list-group" id="list-tab" role="tablist">';
+
+    //             var tabcontentHTML = '<div class="col-9" style="overflow-y: auto;"><div class="tab-content" id="nav-tabContent">';
+
+    //             for (var i = 0; i < imgresult.length; i++) {
+
+    //                 var image = imgresult[i].document; 
+
+    //                 if (i === 0) {
+    //                     tablistHTML += '<a class="list-group-item list-group-item-action active" id="list-' + image.id + '" data-toggle="list" href="#' + image.id + '" role="tab" aria-controls="home">';
+    //                     tabcontentHTML += '<div class="tab-pane fade show active" id="' + image.id + '" role="tabpanel" aria-labelledby="list-' + image.id + '">';
+    //                 }
+    //                 else {
+    //                     tablistHTML += '<a class="list-group-item list-group-item-action" id="list-' + image.id + '" data-toggle="list" href="#' + image.id + '" role="tab" aria-controls="home">';
+    //                     tabcontentHTML += '<div class="tab-pane fade show" id="' + image.id + '" role="tabpanel" aria-labelledby="list-' + image.id + '">';
+    //                 }
+
+    //                 tablistHTML += '<img src="' + getThumbnailPath(image)+'"/>';
+    //                 tablistHTML += '<span>  '+image.metadata_storage_name+'</span>';
+    //                 tablistHTML += '</a>';
+
+    //                 tabcontentHTML += '<h6>' + image.metadata_storage_name + ' (' + image.contentType + ') </h6>';
+    //                 tabcontentHTML += GetFileHTML(image.metadata_storage_path);
+    //                 tabcontentHTML += GetTagsHTML(image);
+    //                 tabcontentHTML += '</div>';
+    //             }
+    //             tabcontentHTML += '</div></div>';
+    //             tablistHTML += '</div></div>';
+
+    //             imagesContainerHTML += (tablistHTML+tabcontentHTML+'</div>');
+    //         }
+    //         else {
+    //             imagesContainerHTML = '<h5>No embedded images found for this document.</h5>';
+    //         }
+    //         imagesContainerHTML += '</div>';
+    //         imagesContainerHTML += '</div>';
+
+    //         $('#images-pivot-link').html("Embedded Images (" + data.count+")");
+    //         $('#images-viewer').html(imagesContainerHTML);
+    //     });
+
+
+
+   //  return imagesContainerHTML;
+//}

@@ -18,8 +18,8 @@ var $grid = $('#doc-details-div');
 $(document).ready(function () {
     if (q) {
         document.getElementById('q').value = q;
-        Search();
     }
+    window[searchmethod]();
 });
 
 function InitLayout() {
@@ -53,4 +53,11 @@ function htmlEncode(value) {
 
 function htmlDecode(value) {
     return $('<div/>').html(value).text();
+}
+
+function OpenSearch() {
+    window.location.replace(encodeURI("/Home/Search"));
+}
+function OpenImagesSearch() {
+    window.location.replace(encodeURI("/Home/Images"));
 }

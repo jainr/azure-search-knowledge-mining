@@ -66,11 +66,11 @@ namespace CognitiveSearch.UI
             }
         }
 
-        public DocumentSearchResult<Document> Search(string searchText, SearchFacet[] searchFacets = null, string[] selectFilter = null, int currentPage = 1, string polygonString = null)
+        public DocumentSearchResult<Document> Search(string searchText, SearchFacet[] searchFacets = null, string[] selectFilter = null, int currentPage = 1, string incomingfilter = "",string polygonString = null)
         {
             try
             {
-                SearchParameters sp = GenerateSearchParameters(searchFacets, selectFilter, currentPage, polygonString, false);
+                SearchParameters sp = GenerateSearchParameters(searchFacets, selectFilter, currentPage, incomingfilter, polygonString, false);
 
                 if (!string.IsNullOrEmpty(telemetryClient.InstrumentationKey))
                 {
@@ -91,7 +91,7 @@ namespace CognitiveSearch.UI
         {
             try
             {
-                SearchParameters sp = GenerateSearchParameters(searchFacets, selectFilter, currentPage, polygonString, true);
+                SearchParameters sp = GenerateSearchParameters(searchFacets, selectFilter, currentPage, "", polygonString, true);
 
                 if (!string.IsNullOrEmpty(telemetryClient.InstrumentationKey))
                 {
@@ -109,7 +109,7 @@ namespace CognitiveSearch.UI
         }
 
 
-        public SearchParameters GenerateSearchParameters(SearchFacet[] searchFacets = null, string[] selectFilter = null, int currentPage = 1, string polygonString = null, bool isMap = false)
+        public SearchParameters GenerateSearchParameters(SearchFacet[] searchFacets = null, string[] selectFilter = null, int currentPage = 1, string incomingFilter = "", string polygonString = null, bool isMap = false)
         {
             // For more information on search parameters visit: 
             // https://docs.microsoft.com/en-us/dotnet/api/microsoft.azure.search.models.searchparameters?view=azure-dotnet
@@ -124,7 +124,7 @@ namespace CognitiveSearch.UI
                 Facets = Model.Facets.Select(f => f.Name).ToList()                
             };
 
-            string filter = null;
+            string filter = incomingFilter;
             var filterStr = string.Empty;
 
             if (searchFacets != null)
