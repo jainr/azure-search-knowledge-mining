@@ -55,7 +55,7 @@ function ShowDocument(id) {
             pivotsHTML += '                 </div> ';
             pivotsHTML += '             </div>';
 
-            if (result.geoLocation !== null) {
+            if (result.geoLocation !== null && window.location.pathname.indexOf("/Search") !== -1) {
                 pivotsHTML += '             <div id="maps-pivot" class="ms-Pivot-content" data-content="maps"> ';
                 pivotsHTML += '                 <div id="maps-viewer"> ';
                 pivotsHTML += '                 </div> ';
@@ -78,7 +78,7 @@ function ShowDocument(id) {
 
             $('#metadata-viewer').html(metadataContainerHTML);
 
-            if (result.geoLocation !== null)
+            if (result.geoLocation !== null && window.location.pathname.indexOf("/Search") !== -1)
             {
                 // Maps Tab Content
                 var mapsContainerHTML = GetMapsHTML(result);
@@ -94,7 +94,7 @@ function ShowDocument(id) {
 
             pivotLinksHTML += '<li id="metadata-pivot-link" class="ms-Pivot-link" data-content="metadata" title="Metadata" tabindex="1">Metadata</li>';
 
-            if (result.geoLocation !== null) {
+            if (result.geoLocation !== null && window.location.pathname.indexOf("/Search") !== -1) {
                 pivotLinksHTML += '<li id="maps-pivot-link" class="ms-Pivot-link" data-content="maps" title="Maps" tabindex="1">Maps</li>';
             }
 
@@ -109,14 +109,15 @@ function ShowDocument(id) {
                 new fabric['Pivot'](PivotElements[i]);
             }
 
-            // this needs to happen after maps-pivot-link is part of the DOM
-            if (result.geoLocation !== null) {
-                AuthenticateMap(result);
-            }
-
             //Log Click Events
             LogClickAnalytics(result.metadata_storage_name, 0);
             GetSearchReferences(q);
+
+            // this needs to happen after maps-pivot-link is part of the DOM
+            // and only on regular search, and not image search - && window.location.pathname.indexOf("/Images") === -1
+            if (result.geoLocation !== null && window.location.pathname.indexOf("/Search") !== -1 ) {
+                AuthenticateMap(result);
+            }
         });
 }
 
