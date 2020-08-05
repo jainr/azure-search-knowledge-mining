@@ -274,11 +274,11 @@ function UpdateResults(data) {
 
 
 
-    for (var i = 0; i < data.mapresults.length; i++) {
+    for (var i = 0; i < data.results.length; i++) {
 
-        var result = data.mapresults[i].document;
+        var result = data.results[i].document;
         var searchScore = "@search.score";
-        var score = data.mapresults[i]["@search.score"];
+        var score = data.results[i]["@search.score"];
         score = score.toFixed(2);
         var name;
         var title;

@@ -95,7 +95,7 @@ namespace CognitiveSearch.UI.Controllers
                 q = q.Replace("?", "");
             }
 
-            var response = _docSearch.Search(q, searchFacets, selectFilter, currentPage, polygonString);
+            var response = _docSearch.Search(q, searchFacets, selectFilter, currentPage, "", polygonString);
             var mapresponse = _docSearch.SearchAll(q, searchFacets, selectFilter, currentPage, polygonString);
             var searchId = _docSearch.GetSearchId().ToString();
             var facetResults = new List<object>();
