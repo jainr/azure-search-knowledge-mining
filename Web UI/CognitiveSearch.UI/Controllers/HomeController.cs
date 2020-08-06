@@ -153,7 +153,7 @@ namespace CognitiveSearch.UI.Controllers
                 q = q.Replace("?", "");
             }
 
-            var embeddedfilter = $"search.in(contentType,'image/jpeg,image/png,image/gif,image/tiff')";
+            var embeddedfilter = $"search.in(contentType,'image/jpeg,image/png,image/gif')";
 
             var response = _docSearch.Search(q, searchFacets, selectFilter, currentPage, embeddedfilter, polygonString);
             var searchId = _docSearch.GetSearchId().ToString();

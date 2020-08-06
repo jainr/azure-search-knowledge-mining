@@ -128,7 +128,7 @@ function UpdatePagination(docCount) {
 
     htmlString += '<li class="active"><a href="#">' + currentPage + '</a></li>';
 
-    if (currentPage < totalPages) {
+    if (currentPage <= totalPages) {
         htmlString += `<li><a href="javascript:void(0)" onclick="GoToPage('${forwardPage}')" class="ms-Icon ms-Icon--ChevronRightMed" style="display: inline-block; font-size: 100%; margin: -1px 0px 0px 0px;"></a></li>`;
     }
     $("#pagination").html(htmlString);
@@ -137,7 +137,11 @@ function UpdatePagination(docCount) {
 
 function GoToPage(page) {
     currentPage = page;
-    Search();
+    if (window.location.pathname.indexOf("/Search") !== -1) {
+        Search();
+    } else {
+        ImagesSearch();
+    }
 }
 
 function SampleSearch(text) {
