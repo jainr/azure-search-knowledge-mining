@@ -270,7 +270,7 @@ function UpdateMap(data) {
 function UpdateResults(data) {
     var resultsHtml = '';
 
-    $("#doc-count").html(` Available Results: ${data.count}`);
+    $("#doc-count").html(` Available Results: ${data.mapresults.length}`);
 
 
 
@@ -428,4 +428,47 @@ function UpdateResults(data) {
     }
 
     $("#doc-details-div").html(resultsHtml);
+}
+
+function UpdateImagesResults(data, currentPage) {
+    var resultsHtml = '';
+    $("#doc-count").html(` Available Results: ${data.count}`);
+
+    for (var i = 0; i < data.results.length; i++) {
+
+        var docresult = data.results[i].document;
+
+        docresult.idx = i;
+
+        var id = docresult[data.idField];
+        var name = docresult.metadata_storage_name;
+        var path;
+
+        if (data.isPathBase64Encoded) {
+            path = Base64Decode(docresult.metadata_storage_path) + token;
+        }
+        else {
+            path = docresult.metadata_storage_path + token;
+        }
+
+        var tags = GetTagsHTML(docresult);
+
+        if (path !== null) {
+            var classList = "results-div ";
+            if (i === 0) classList += "results-sizer";
+            var pathLower = path.toLowerCase();
+            var pathExtension = pathLower.split('.').pop();
+
+                resultsHtml += `<div class="${classList}" onclick = "ShowDocument('${id}');">
+                            <div class="search-result">
+                                <img class="img-result"  style='max-width:100%;' src="${path}"/>';
+                                    <div class="results-header">
+                                    <h4>${name}</h4>
+                                    </div>
+                                </div>
+                            </div>
+                            </div>`;
+            }
+            $("#ImagesResultsDiv").html(resultsHtml);
+        }
 }
